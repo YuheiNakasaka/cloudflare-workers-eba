@@ -1,6 +1,7 @@
 import { StatusCode } from "hono/utils/http-status";
 
 const PREFIX = "v1:";
+const EXPIRATION_TIME = 60 * 60 * 24 * 30;
 
 export interface ApiDefinition {
   namespace: string;
@@ -44,7 +45,9 @@ export const createNamespace = async (
     password: password,
     endpoints: [],
   };
-  await EBA.put(namespace, JSON.stringify(value));
+  await EBA.put(namespace, JSON.stringify(value), {
+    expirationTtl: EXPIRATION_TIME,
+  });
   return value;
 };
 
@@ -70,7 +73,10 @@ export const createEndpoint = async (
         namespace: namespace,
         password: apiDefinition.password,
         endpoints: newEndpoints,
-      })
+      }),
+      {
+        expirationTtl: EXPIRATION_TIME,
+      }
     );
     return true;
   } else {
@@ -81,7 +87,10 @@ export const createEndpoint = async (
         namespace: namespace,
         password: apiDefinition.password,
         endpoints: endpoints,
-      })
+      }),
+      {
+        expirationTtl: EXPIRATION_TIME,
+      }
     );
     return true;
   }
