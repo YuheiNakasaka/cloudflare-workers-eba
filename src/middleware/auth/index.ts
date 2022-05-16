@@ -1,4 +1,4 @@
-import type { Context, Next } from "hono";
+import { Context, Next } from "hono";
 import { ApiDefinition } from "../../model";
 import { xNamespace, xPassword, xRequestType } from "../../utils/header";
 
@@ -12,20 +12,50 @@ export const auth = () => {
       await next();
       return;
     } else if (type === "create") {
-      if (!namespace) return c.json({ message: "namespace is required" }, 400);
-      if (!password) return c.json({ message: "password is required" }, 400);
+      if (!namespace) {
+        c.res = new Response('{"message":"namespace is required"}', {
+          status: 400,
+        });
+        return;
+      }
+      if (!password) {
+        c.res = new Response('{"message":"password is required"}', {
+          status: 400,
+        });
+        return;
+      }
 
       const record = await EBA.get(namespace);
-      if (!record) return c.json({ message: "namespace is invalid" }, 400);
+      if (!record) {
+        c.res = new Response('{"message":"namespace is invalid"}', {
+          status: 400,
+        });
+        return;
+      }
 
       const object: ApiDefinition = JSON.parse(record);
-      if (object.password !== password)
-        return c.json({ message: "authentication error" }, 401);
+      if (object.password !== password) {
+        c.res = new Response('{"message":"authentication error"}', {
+          status: 401,
+        });
+        return;
+      }
     } else {
-      if (!namespace) return c.json({ message: "namespace is required" }, 400);
+      if (!namespace) {
+        c.res = new Response('{"message":"namespace is required"}', {
+          status: 400,
+        });
+        return;
+      }
 
       const record = await EBA.get(namespace);
-      if (!record) return c.json({ message: "not found" }, 404);
+
+      if (!record) {
+        c.res = new Response('{"message":"not found"}', {
+          status: 404,
+        });
+        return;
+      }
     }
     await next();
   };
