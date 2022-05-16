@@ -19,7 +19,7 @@ Create an unique namespace.
 | password | [required] password |       |
 
 ```sh
-$ curl -X POST localhost:8787 -H 'X-REQUEST-TYPE:register' -d '{"password": "xxxxxxxx"}'
+$ curl -X POST 'https://eba.razokulover.workers.dev/' -H 'X-REQUEST-TYPE:register' -d '{"password": "xxxxxxxx"}'
 {"namespace": "your-unique-namespace", "password": "xxxxxxxx"}
 ```
 
@@ -45,20 +45,20 @@ Create an endpoint.
 | responseBody   | [optional] response body   |                                            |
 
 ```sh
-$ curl -X POST localhost:8787 \
+$ curl -X POST 'https://eba.razokulover.workers.dev/' \
   -H 'X-NAMESPACE:your-unique-namespace' \
   -H 'X-PASSWORD:xxxxxxxx' \
   -H 'X-REQUEST-TYPE:create' \
-  -d '{"url": "/foo/bar/baz", "method": "GET", "statusCode": 200, "responseHeader": {"content-type": "application/json", "cache-control": "no-cache"}, "responseBody": {"message": "Hello World", "feeling": "Good"}}'
+  -d '{"url": "/ebata-kisaki", "method": "GET", "statusCode": 200, "responseHeader": {"content-type": "application/json", "cache-control": "no-cache"}, "responseBody": {"blog": "https://ameblo.jp/juicejuice-official/theme-10115236106.html"}}'
 {"message": "ok"}
 ```
 
-# How to call created endpoints
+# How to call the created endpoint
 
 ```sh
-$ curl -D -X GET -H 'X-NAMESPACE:your-unique-namespace' - localhost:8787/foo/bar/baz
+$ curl -X GET -H 'X-NAMESPACE:your-unique-namespace' -D - 'https://eba.razokulover.workers.dev/ebata-kisaki'
 HTTP/2 200
 content-type: application/json
 cache-control: no-cache
-{"message": "Hello World", "feeling": "Good"}
+{"blog": "https://ameblo.jp/juicejuice-official/theme-10115236106.html"}
 ```
